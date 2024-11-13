@@ -6,6 +6,7 @@ const poolInstance = require("./db/pool");
 const bcrypt = require("bcryptjs");
 const pgSession = require("connect-pg-simple")(session);
 const LocalStrategy = require("passport-local").Strategy;
+const signUpRouter = require("./routes/signUpRouter");
 
 const app = express();
 
@@ -84,20 +85,8 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-app.get("/sign-up", (req, res) => res.render("sign-up-form"));
-app.post("/sign-up", async (req, res, next) => {
-  bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-    if (err) {
-      return next(err);
-    }
-    await poolInstance.query(
-      "INSERT INTO users (username, password) VALUES ($1, $2)",
-      [req.body.username, hashedPassword]
-    );
-  });
+app.use("/sign-up", signUpRouter);
 
-  res.redirect("/");
-});
 app.post(
   "/log-in",
   passport.authenticate("local", {
