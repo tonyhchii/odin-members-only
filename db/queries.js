@@ -20,4 +20,13 @@ const createMessage = async (message, memberID) => {
   );
 };
 
-module.exports = { getMessages, setMember, createMessage };
+const getUserByUsername = async (username) => {
+  const { rows } = await poolInstance.query(
+    "SELECT * FROM users WHERE username = $1",
+    [username]
+  );
+
+  return rows;
+};
+
+module.exports = { getMessages, setMember, createMessage, getUserByUsername };
