@@ -6,6 +6,10 @@ const poolInstance = require("./db/pool");
 const pgSession = require("connect-pg-simple")(session);
 const signUpRouter = require("./routes/signUpRouter");
 const logInRouter = require("./routes/logInRouter");
+const mainPageRouter = require("./routes/mainPageRouter");
+const memberRouter = require("./routes/memberRouter");
+const createMessageRouter = require("./routes/createMessageRouter");
+const assetsPath = path.join(__dirname, "public");
 
 const app = express();
 
@@ -31,6 +35,7 @@ app.use(
 );
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static(assetsPath));
 
 app.use((req, res, next) => {
   res.locals.user = req.user;
@@ -38,13 +43,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  res.render("index");
-});
+app.use("/", mainPageRouter);
 
 app.use("/log-in", logInRouter);
 
 app.use("/sign-up", signUpRouter);
+
+app.use("/member", memberRouter);
+
+app.use("/create", createMessageRouter);
 
 app.get("/log-out", (req, res, next) => {
   req.logout((err) => {

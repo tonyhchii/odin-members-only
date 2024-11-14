@@ -3,14 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <title></title>
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <% if(!locals.user) {%>
-        <a href="/log-in">Log In</a><a href="/sign-up">Sign Up</a>
-    <% } else { %>
-        <h1>Welcome <%= locals.user.username %></h1>
-        <a href="/log-out">Log Out</a>
-        <% } %>
+    <div class="header flex">
+        <div class="header-left">
+            <h1>Members-Only-Message-Board</h1>
+        </div>
+        <div class="header-right">
+            <% if(!locals.user) {%>
+                <a href="/log-in">Log In</a><a href="/sign-up">Sign Up</a>
+            <% } else { %>
+                <p>Welcome <%= locals.user.username %></p>
+                <a href="/member">Become a member</a>
+                <a href="/create">Create a post</a>
+                <a href="/log-out">Log Out</a>
+                <% } %>
+        </div> 
+    </div>
+    <div class="message-board">
+        <% locals.messages.forEach((message) => { %>
+            <div class="message-card">
+                <% if (locals.user != undefined) { %> 
+                <h2 class="user"><%= locals.user.role == "member" || locals.user.role == "admin" ? message.email : "Anon"%></h2>
+                <%} else { %>
+                    <h2>Anon</h2>
+                <% } %>
+                <div class="message"><p><%=message.message %></p></div>
+            </div>
+        <% }) %>
+    </div>
+    
 
 </body>
 </html>

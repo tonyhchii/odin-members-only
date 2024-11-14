@@ -9,8 +9,8 @@ const signUpUser = async (req, res, next) => {
       return next(err);
     }
     await poolInstance.query(
-      "INSERT INTO users (username, password) VALUES ($1, $2)",
-      [req.body.username, hashedPassword]
+      "INSERT INTO users (username, password, role, email) VALUES ($1, $2, $3, $4)",
+      [req.body.username, hashedPassword, "non-member", req.body.email]
     );
   });
   res.redirect("/");
